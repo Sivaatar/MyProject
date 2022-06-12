@@ -1,0 +1,139 @@
+create table Department_Table(
+DepartmentId bigint primary key,
+DepartmentName nvarchar(100));
+
+create table Employee_Table(
+EmployeeId bigint primary key,
+EmployeeName nvarchar(100),
+EmployeeEmail nvarchar(100) unique,
+EmployeeDepartmentId bigint foreign key references Department_Table(DepartmentId),
+CreatedOn datetime default getdate(),
+Updated datetime default getdate()
+)
+
+create procedure Department_details
+@DepartmentId bigint ,
+@DepartmentName nvarchar(100),
+@type nvarchar(50)
+AS
+BEGIN
+IF (@type='insert')
+BEGIN
+----------------------------------------insert into table
+insert into Department_Table
+(DepartmentId,DepartmentName)
+values
+(@DepartmentId,@DepartmentName)
+END
+ELSE IF (@type='Read')
+BEGIN
+select * from Department_Table where DepartmentId=@DepartmentId
+END
+
+-----------------------------------------------get all values
+ELSE IF (@type='readall')
+BEGIN
+select * from Department_Table
+END
+-----------------------------------------------update values
+ELSE IF (@type='update')
+BEGIN
+update Department_Table SET
+	DepartmentId=@DepartmentId,
+	DepartmentName=@DepartmentName
+where DepartmentId=@DepartmentId
+END
+-----------------------------------------------delete values
+ELSE IF (@type='delete')
+BEGIN
+DELETE  from Department_Table where DepartmentId=@DepartmentId
+END
+END
+
+
+
+
+create proc Employee_details 
+@EmployeeId bigint ,
+@EmployeeName nvarchar(100),
+@EmployeeEmail nvarchar(100) ,
+@EmployeeDepartmentId bigint,
+@type nvarchar(50)
+
+AS
+BEGIN 
+----------------------------------------------insert into table
+IF (@type='insert')
+BEGIN
+insert into Employee_Table
+(EmployeeId,EmployeeName,EmployeeEmail,EmployeeDepartmentId)
+values
+(@EmployeeId,@EmployeeName,@EmployeeEmail,@EmployeeDepartmentId)
+END
+--------------------------------------------get values of table using id
+ELSE IF (@type='Read')
+BEGIN
+select * from  Employee_Table where EmployeeId=@EmployeeId
+END
+--------------------------------------------------get all values
+ELSE IF (@type='readall')
+BEGIN
+select * from Employee_Table
+END
+----------------------------------------------------update values
+ELSE IF (@type='update')
+BEGIN
+update Employee_Table SET
+	EmployeeId=@EmployeeId,
+	EmployeeName=@EmployeeName,
+	EmployeeEmail=@EmployeeEmail,
+	EmployeeDepartmentId=@EmployeeDepartmentId
+where EmployeeId=@EmployeeId
+END
+---------------------------------------------------delete values
+ELSE IF (@type='delete')
+BEGIN
+DELETE  from Employee_Table where EmployeeId=@EmployeeId
+END
+END
+
+
+
+------------------insert values-----------
+insert into Department_Table(DepartmentId,DepartmentName)values
+(1001,'Amir');
+
+insert into Department_Table(DepartmentId,DepartmentName)values
+(1002,'ragav');
+
+
+
+insert into Employee_Table
+(EmployeeId,EmployeeName,EmployeeEmail,EmployeeDepartmentId)
+values
+(1,'Ramsay','ramsay@gmail.com',1001);
+
+
+insert into Employee_Table
+(EmployeeId,EmployeeName,EmployeeEmail,EmployeeDepartmentId)
+values
+(2,'bavan','bavan@gmail.com',1001);
+
+insert into Employee_Table
+(EmployeeId,EmployeeName,EmployeeEmail,EmployeeDepartmentId)
+values
+(3,'kiruba','kiruba@gmail.com',1002);
+
+
+update Employee_Table SET
+	EmployeeId=@EmployeeId,
+	EmployeeName=@EmployeeName,
+	EmployeeEmail=@EmployeeEmail,
+	EmployeeDepartmentId=@EmployeeDepartmentId
+where EmployeeId=@EmployeeId
+
+
+update Department_Table SET DepartmentName='cse'
+where DepartmentId=1001;
+
+select * from Department_Table;
